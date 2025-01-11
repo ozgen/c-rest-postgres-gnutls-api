@@ -51,6 +51,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 build
+certs
 .idea
 cmake-build-debug
 dev.env
