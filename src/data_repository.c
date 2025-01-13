@@ -1,5 +1,5 @@
 #include "data_repository.h"
-#include <libpq-fe.h>
+#include <postgresql/libpq-fe.h>
 #include <stdio.h>
 #include <stdlib.h>
 

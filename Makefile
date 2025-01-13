@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -I/usr/local/include -I/usr/local/opt/libpq/include -I/usr/local/include/cgreen -Isrc
-LDFLAGS = -L/usr/local/lib -L/usr/local/opt/libpq/lib
+CFLAGS = -I/usr/local/include -I/usr/local/opt/libpq/include -I/usr/include/postgresql -I/usr/local/include/cgreen -Isrc
+LDFLAGS = -L/usr/local/lib -L/usr/local/opt/libpq/lib -L/usr/lib/x86_64-linux-gnu
 LIBS = -lpq -lgnutls -lcgreen
 BUILD_DIR = build
 SRCS = src/main.c src/server.c src/data_handler.c src/data_service.c src/data_repository.c src/dotenv.c

@@ -36,6 +36,12 @@ static void PQfinish_stub(PGconn *conn) {
     mock(conn); // Mocked cleanup
 }
 
+static void expect_str_equal(const char *expected_str, const char *expected_value) {
+    expect(setenv_stub,
+        when(expected_str, is_equal_to_string(expected_value)),
+        will_return(0));
+}
+
 // Test case using stubs
 Describe(DataRepository);
 BeforeEach(DataRepository) {}
@@ -43,9 +49,11 @@ AfterEach(DataRepository) {}
 
 Ensure(DataRepository, fetch_data_returns_mocked_data) {
     // Setup expectations for mocked functions
-    expect(PQconnectdb_stub, when(conninfo, is_equal_to("host=localhost port=5432 dbname=testdb user=test password=test")), will_return((intptr_t)0x1234));
+    char * connection_str = "host=localhost port=5432 dbname=testdb user=test password=test";
+    char * query_str = "SELECT data FROM sample_table LIMIT 1;";
+    expect(PQconnectdb_stub, when(conninfo, is_equal_to_string(connection_str)), will_return((intptr_t)0x1234));
     expect(PQstatus_stub, will_return(CONNECTION_OK));
-    expect(PQexec_stub, when(query, is_equal_to("SELECT data FROM sample_table LIMIT 1;")), will_return((intptr_t)0x5678));
+    expect(PQexec_stub, when(query, is_equal_to_string(query_str)), will_return((intptr_t)0x5678));
     expect(PQresultStatus_stub, will_return(PGRES_TUPLES_OK));
     expect(PQntuples_stub, will_return((intptr_t)1));
     expect(PQgetvalue_stub, will_return("Mocked Data"));

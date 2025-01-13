@@ -29,12 +29,14 @@ include_directories(
         /usr/local/opt/libpq/include    # Path for libpq headers
         /usr/local/include              # Path for GnuTLS headers
         /usr/local/include/cgreen       # Path for Cgreen headers
+        /usr/include/postgresql         # Path for ubuntu
 )
 
 # Link directories for libraries
 link_directories(
         /usr/local/opt/libpq/lib        # Path for libpq library
         /usr/local/lib                  # Path for GnuTLS and Cgreen libraries
+        /usr/lib/x86_64-linux-gnu      # Common Ubuntu path for libraries
 )
 
 # Create the main executable

@@ -40,7 +40,8 @@ int dotenv_load_with_dependencies(const char *filename,
         const char *key = line;
         const char *value = delimiter + 1;
 
-        printf("DEBUG: Key = '%s', Value = '%s'\n", key, value); // Debugging output
+        // this print added for debugging purposes
+        // printf("DEBUG: Key = '%s', Value = '%s'\n", key, value);
 
         // Set the environment variable
         if (setenv_func(key, value, 1) != 0) {
