@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.1'
 services:
   postgres:
     image: postgres:16
@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: testdb
     ports:
-      - "5432:5432" # Map PostgreSQL to localhost:5432
+      - "55432:5432" # Map PostgreSQL to localhost:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db-init.sh:/docker-entrypoint-initdb.d/db-init.sh:ro

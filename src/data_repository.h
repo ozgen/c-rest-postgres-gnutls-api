@@ -1,6 +1,6 @@
 #ifndef DATA_REPOSITORY_H
 #define DATA_REPOSITORY_H
-#include <libpq-fe.h>
+#include <postgresql/libpq-fe.h>
 
 const char *fetch_data();
 const char *fetch_data_with_stubs(
