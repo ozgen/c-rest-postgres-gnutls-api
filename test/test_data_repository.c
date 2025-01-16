@@ -1,4 +1,3 @@
-#include <libpq-fe.h>
 #include <cgreen/cgreen.h>
 #include <cgreen/mocks.h>
 #include "data_repository.h"

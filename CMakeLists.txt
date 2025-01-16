@@ -12,6 +12,7 @@ set(SOURCES
         src/data_repository.c
         src/dotenv.c
         src/dotenv.h
+        src/migration_manager.c
 )
 
 # Add test sources for unit testing
@@ -21,6 +22,8 @@ set(TEST_SOURCES
         test/test_dotenv.c
         src/dotenv.c
         test/test_main.c
+        test/test_migration_manager.c
+        src/migration_manager.c
 )
 
 # Include directories for headers
@@ -36,7 +39,7 @@ include_directories(
 link_directories(
         /usr/local/opt/libpq/lib        # Path for libpq library
         /usr/local/lib                  # Path for GnuTLS and Cgreen libraries
-        /usr/lib/x86_64-linux-gnu      # Common Ubuntu path for libraries
+        /usr/lib/x86_64-linux-gnu       # Common Ubuntu path for libraries
 )
 
 # Create the main executable

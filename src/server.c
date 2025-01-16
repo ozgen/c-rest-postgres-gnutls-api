@@ -1,7 +1,6 @@
 // src/server.c
 #include "server.h"
 #include "data_handler.h"
-#include "dotenv.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <gnutls/gnutls.h>
@@ -19,11 +18,6 @@ void route_request(gnutls_session_t session, const char *request) {
 }
 
 void start_server() {
-    // Load environment variables from the .env file
-    if (dotenv_load("../dev.env") != 0) {
-        fprintf(stderr, "Failed to load dev.env file\n");
-        return;
-    }
 
     const char *cert_path = getenv("SERVER_CERT_PATH");
     const char *key_path = getenv("SERVER_KEY_PATH");
