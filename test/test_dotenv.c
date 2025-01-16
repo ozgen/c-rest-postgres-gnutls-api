@@ -3,6 +3,7 @@
 //
 
 #include <stdio.h>
+#include <unistd.h>
 #include <cgreen/cgreen.h>
 #include <cgreen/mocks.h>
 #include "dotenv.h"
@@ -27,15 +28,21 @@ static void expect_setenv(const char *expected_name, const char *expected_value,
 
 // Helper function to create a temporary file with test data
 char *create_temp_file(const char *content) {
-    char *filename = tmpnam(NULL); // Generate a temporary filename
-    FILE *file = fopen(filename, "w");
-    if (!file) {
+    char filename[] = "/tmp/tempfileXXXXXX";
+    int fd = mkstemp(filename); // Securely create a unique temporary file
+    if (fd == -1) {
         perror("Failed to create temp file");
+        return NULL;
+    }
+    FILE *file = fdopen(fd, "w");
+    if (!file) {
+        perror("Failed to open temp file");
+        close(fd);
         return NULL;
     }
     fprintf(file, "%s", content);
     fclose(file);
-    return filename;
+    return strdup(filename); // Return a dynamically allocated copy of the filename
 }
 
 // Test case: File cannot be opened
