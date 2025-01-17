@@ -1,8 +1,10 @@
 #ifndef DATA_REPOSITORY_H
 #define DATA_REPOSITORY_H
 #include <postgresql/libpq-fe.h>
+#include "db_connection.h"
 
-const char *fetch_data();
+
+const char *fetch_data(DBConnHelpers *);
 const char *fetch_data_with_stubs(
     PGconn *(*connectdb_func)(const char *),
     ConnStatusType (*status_func)(const PGconn *),

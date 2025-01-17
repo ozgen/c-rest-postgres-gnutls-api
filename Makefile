@@ -4,7 +4,7 @@ LDFLAGS = -L/usr/local/lib -L/usr/local/opt/libpq/lib -L/usr/lib/x86_64-linux-gn
 LIBS = -lpq -lgnutls -lcgreen
 BUILD_DIR = build
 SRCS = src/main.c src/server.c src/data_handler.c src/data_service.c src/data_repository.c src/dotenv.c
-TEST_SRCS = test/test_data_repository.c src/data_repository.c test/test_dotenv.c src/dotenv.c test/test_main.c src/migration_manager.c test/test_migration_manager.c
+TEST_SRCS = test/test_data_repository.c src/data_repository.c test/test_dotenv.c src/dotenv.c test/test_main.c src/migration_manager.c test/test_migration_manager.c src/db_connection.c test/test_db_connection.c
 OBJS = $(SRCS:src/%.c=$(BUILD_DIR)/%.o)
 TEST_OBJS = $(TEST_SRCS:test/%.c=$(BUILD_DIR)/%.o)
 
