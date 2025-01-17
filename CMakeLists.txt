@@ -13,6 +13,8 @@ set(SOURCES
         src/dotenv.c
         src/dotenv.h
         src/migration_manager.c
+        src/db_connection.c
+        src/db_connection.h
 )
 
 # Add test sources for unit testing
@@ -24,6 +26,8 @@ set(TEST_SOURCES
         test/test_main.c
         test/test_migration_manager.c
         src/migration_manager.c
+        src/db_connection.c
+        test/test_db_connection.c
 )
 
 # Include directories for headers

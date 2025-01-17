@@ -117,15 +117,6 @@ Ensure(MigrationManager_Migrations, run_migrations_executes_correctly_with_temp_
         .finish_func = mock_finish_func,
     };
 
-    // Mock initialization query
-    const char *init_query =
-            "CREATE TABLE IF NOT EXISTS schema_migrations ("
-            "id SERIAL PRIMARY KEY, "
-            "filename TEXT UNIQUE NOT NULL, "
-            "applied_at TIMESTAMPTZ DEFAULT NOW());";
-
-    PGresult *mock_init_result = mock_exec_func(mock_connection, init_query);
-
     // Mock applying migrations
     expect(mock_apply_migration_func,
            when(conn, is_equal_to(mock_connection)),
@@ -144,8 +135,6 @@ Ensure(MigrationManager_Migrations, run_migrations_executes_correctly_with_temp_
     remove(filepath);
     rmdir(mock_migrations_path);
     free(temp_file);
-    free(mock_init_result);
-
 }
 
 // Function to return the MigrationManager_Migrations test suite

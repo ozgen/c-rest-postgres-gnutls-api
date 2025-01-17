@@ -2,32 +2,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char *fetch_data() {
+const char *fetch_data(DBConnHelpers *helpers) {
     static char result[256];
 
-    // Read PostgreSQL connection details from environment variables
-    const char *host = getenv("POSTGRES_HOST");
-    const char *port = getenv("POSTGRES_PORT");
-    const char *dbname = getenv("POSTGRES_DB");
-    const char *user = getenv("POSTGRES_USER");
-    const char *password = getenv("POSTGRES_PASSWORD");
-
-    if (!host || !port || !dbname || !user || !password) {
-        fprintf(stderr, "Database environment variables are not set properly.\n");
+    if (!helpers || !helpers->connect_func || !helpers->status_func || !helpers->finish_func) {
+        fprintf(stderr, "DBConnHelpers not set up properly.\n");
         return "Database Configuration Error";
     }
 
-    // Construct the connection string
-    char conninfo[512];
-    snprintf(conninfo, sizeof(conninfo),
-             "host=%s port=%s dbname=%s user=%s password=%s",
-             host, port, dbname, user, password);
+    char *conninfo = build_connection_string();
+    if (!conninfo) {
+        return "Database Configuration Error";
+    }
 
-    // Connect to the PostgreSQL database
-    PGconn *conn = PQconnectdb(conninfo);
-    if (PQstatus(conn) != CONNECTION_OK) {
-        fprintf(stderr, "Connection failed: %s\n", PQerrorMessage(conn));
-        PQfinish(conn);
+    PGconn *conn = helpers->connect_func(conninfo);
+    free(conninfo);
+
+    if (helpers->status_func(conn) != CONNECTION_OK) {
+        helpers->finish_func(conn);
         return "Database Connection Error";
     }
 
@@ -39,7 +31,7 @@ const char *fetch_data() {
     }
 
     PQclear(res);
-    PQfinish(conn);
+    helpers->finish_func(conn);
     return result;
 }
 
