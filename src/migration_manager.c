@@ -15,7 +15,7 @@ int compare_filenames(const void *a, const void *b) {
 }
 
 // Execute a single SQL query
-void execute_sql(PGconn *conn, const char *query, DBHelpers *db_helpers) {
+void execute_sql(PGconn *conn, const char *query, const DBHelpers *db_helpers) {
     assert(conn != NULL);
     assert(query != NULL);
     assert(db_helpers != NULL);
@@ -31,7 +31,7 @@ void execute_sql(PGconn *conn, const char *query, DBHelpers *db_helpers) {
 }
 
 // Apply a single migration file
-void apply_migration(PGconn *conn, const char *filename, DBHelpers *db_helpers) {
+void apply_migration(PGconn *conn, const char *filename, const DBHelpers *db_helpers) {
     assert(conn != NULL);
     assert(filename != NULL);
     assert(db_helpers != NULL);
@@ -101,8 +101,8 @@ void apply_migration(PGconn *conn, const char *filename, DBHelpers *db_helpers) 
 void run_migrations(
     PGconn *conn,
     const char *migrations_path,
-    DBHelpers *db_helpers,
-    void (*apply_migration_func)(PGconn *, const char *, DBHelpers *)) {
+    const DBHelpers *db_helpers,
+    void (*apply_migration_func)(PGconn *, const char *, const DBHelpers *)) {
     assert(conn != NULL);
     assert(migrations_path != NULL);
     assert(db_helpers != NULL);
