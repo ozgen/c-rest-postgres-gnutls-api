@@ -8,7 +8,7 @@
 #include <string.h>
 
 // Function to create a new database connection
-PGconn *create_connection(const char *conninfo, DBConnHelpers * conn_helper) {
+PGconn *create_connection(const char *conninfo, const DBHelpers * conn_helper) {
     PGconn *conn = conn_helper->connect_func(conninfo);
     if (conn_helper->status_func(conn) != CONNECTION_OK) {
         fprintf(stderr, "Database connection failed: %s\n", conn_helper->error_func(conn));
@@ -19,7 +19,7 @@ PGconn *create_connection(const char *conninfo, DBConnHelpers * conn_helper) {
 }
 
 // Function to close an existing database connection
-void close_connection(PGconn *conn, DBConnHelpers * conn_helper) {
+void close_connection(PGconn *conn, const DBHelpers * conn_helper) {
     if (conn) {
         conn_helper->finish_func(conn);
     }

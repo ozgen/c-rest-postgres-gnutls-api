@@ -53,7 +53,7 @@ static void mock_finish_func(PGconn *conn) {
     mock(conn);
 }
 
-static void mock_apply_migration_func(PGconn *conn, const char *filepath, DBHelpers *db_helpers) {
+static void mock_apply_migration_func(PGconn *conn, const char *filepath, const DBHelpers *db_helpers) {
     printf("DEBUG: mock_apply_migration_func called with filepath: %s\n", filepath ? filepath : "NULL");
     printf("DEBUG: mock_apply_migration_func called with connection: %p\n", conn);
     assert(conn != NULL);
@@ -142,4 +142,10 @@ TestSuite *MigrationManager_Migrations_tests() {
     TestSuite *suite = create_test_suite();
     add_test_with_context(suite, MigrationManager_Migrations, run_migrations_executes_correctly_with_temp_file);
     return suite;
+}
+
+int main(int argc, char **argv) {
+    TestSuite *suite = create_test_suite();
+    add_suite(suite, MigrationManager_Migrations_tests());
+    return run_test_suite(suite, create_text_reporter());
 }

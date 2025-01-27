@@ -6,7 +6,7 @@
 
 
 const char *get_data_service() {
-    DBConnHelpers conn_helpers = {
+    DBHelpers conn_helpers = {
         .connect_func = PQconnectdb,
         .status_func = PQstatus,
         .finish_func = PQfinish,

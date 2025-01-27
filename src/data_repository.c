@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char *fetch_data(DBConnHelpers *helpers) {
+const char *fetch_data(DBHelpers *helpers) {
     static char result[256];
 
     if (!helpers || !helpers->connect_func || !helpers->status_func || !helpers->finish_func) {

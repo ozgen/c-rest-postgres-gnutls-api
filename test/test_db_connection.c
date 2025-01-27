@@ -17,12 +17,13 @@ static void mock_finish_func(PGconn *conn) {
     mock(conn);
 }
 
-static char *mock_error_func(const PGconn *conn) {
-    return (char *)mock(conn);
+static const char *mock_error_func(const PGconn *conn) {
+    return (const char *)mock(conn);
 }
 
 // Test case setup
 Describe(DBConnection);
+
 BeforeEach(DBConnection) {
     // Set environment variables for the tests
     setenv("POSTGRES_HOST", "localhost", 1);
@@ -31,6 +32,7 @@ BeforeEach(DBConnection) {
     setenv("POSTGRES_USER", "test", 1);
     setenv("POSTGRES_PASSWORD", "test", 1);
 }
+
 AfterEach(DBConnection) {
     // Unset environment variables after each test
     unsetenv("POSTGRES_HOST");
@@ -43,7 +45,7 @@ AfterEach(DBConnection) {
 Ensure(DBConnection, create_connection_returns_valid_connection) {
     PGconn *mock_conn = (PGconn *)0x1234;
 
-    DBConnHelpers helpers = {
+    DBHelpers helpers = {
         .connect_func = mock_connect_func,
         .status_func = mock_status_func,
         .finish_func = mock_finish_func,
@@ -71,8 +73,7 @@ Ensure(DBConnection, create_connection_returns_valid_connection) {
 Ensure(DBConnection, create_connection_handles_failed_connection) {
     PGconn *mock_conn = (PGconn *)0x1234;
 
-    // Define the DBConnHelpers struct
-    DBConnHelpers mock_conn_helpers = {
+    DBHelpers helpers = {
         .connect_func = mock_connect_func,
         .status_func = mock_status_func,
         .finish_func = mock_finish_func,
@@ -97,7 +98,7 @@ Ensure(DBConnection, create_connection_handles_failed_connection) {
 
     // Call the function
     char *conninfo = build_connection_string();
-    PGconn *conn = create_connection(conninfo, &mock_conn_helpers);
+    PGconn *conn = create_connection(conninfo, &helpers);
     free(conninfo);
 
     // Verify the result
@@ -107,7 +108,7 @@ Ensure(DBConnection, create_connection_handles_failed_connection) {
 Ensure(DBConnection, close_connection_closes_valid_connection) {
     PGconn *mock_conn = (PGconn *)0x1234;
 
-    DBConnHelpers helpers = {
+    DBHelpers helpers = {
         .connect_func = mock_connect_func,
         .status_func = mock_status_func,
         .finish_func = mock_finish_func,
@@ -122,7 +123,7 @@ Ensure(DBConnection, close_connection_closes_valid_connection) {
 }
 
 Ensure(DBConnection, close_connection_handles_null_connection) {
-    DBConnHelpers helpers = {
+    DBHelpers helpers = {
         .connect_func = mock_connect_func,
         .status_func = mock_status_func,
         .finish_func = mock_finish_func,
@@ -143,4 +144,10 @@ TestSuite *DBConnection_tests() {
     add_test_with_context(suite, DBConnection, close_connection_closes_valid_connection);
     add_test_with_context(suite, DBConnection, close_connection_handles_null_connection);
     return suite;
+}
+
+int main(int argc, char **argv) {
+    TestSuite *suite = create_test_suite();
+    add_suite(suite, DBConnection_tests());
+    return run_test_suite(suite, create_text_reporter());
 }
