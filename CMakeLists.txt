@@ -3,40 +3,13 @@ project(c_rest_postgres_api C)
 
 set(CMAKE_C_STANDARD 11)
 
-# Add all source files for the main executable
-set(SOURCES
-        src/main.c
-        src/server.c
-        src/data_handler.c
-        src/data_service.c
-        src/data_repository.c
-        src/dotenv.c
-        src/dotenv.h
-        src/migration_manager.c
-        src/db_connection.c
-        src/db_connection.h
-)
-
-# Add test sources for unit testing
-set(TEST_SOURCES
-        test/test_data_repository.c
-        src/data_repository.c
-        test/test_dotenv.c
-        src/dotenv.c
-        test/test_main.c
-        test/test_migration_manager.c
-        src/migration_manager.c
-        src/db_connection.c
-        test/test_db_connection.c
-)
-
 # Include directories for headers
 include_directories(
         src
         /usr/local/opt/libpq/include    # Path for libpq headers
         /usr/local/include              # Path for GnuTLS headers
         /usr/local/include/cgreen       # Path for Cgreen headers
-        /usr/include/postgresql         # Path for ubuntu
+        /usr/include/postgresql         # Path for Ubuntu
 )
 
 # Link directories for libraries
@@ -46,18 +19,68 @@ link_directories(
         /usr/lib/x86_64-linux-gnu       # Common Ubuntu path for libraries
 )
 
-# Create the main executable
-add_executable(c_rest_postgres_api ${SOURCES})
+# Main application sources
+set(MAIN_SOURCES
+        src/main.c
+        src/server.c
+        src/data_handler.c
+        src/data_service.c
+        src/data_repository.c
+        src/dotenv.c
+        src/migration_manager.c
+        src/db_connection.c
+        src/camera_repository.c
+        src/camera_service.c
+        src/camera_handler.c
+        src/json_parser.c
+)
 
-# Link the required libraries to the main executable
+# Main application sources (excluding main.c for tests)
+set(SOURCES
+        src/server.c
+        src/data_handler.c
+        src/data_service.c
+        src/data_repository.c
+        src/dotenv.c
+        src/migration_manager.c
+        src/db_connection.c
+        src/camera_repository.c
+        src/camera_service.c
+        src/camera_handler.c
+        src/json_parser.c
+)
+
+# Main application executable
+add_executable(c_rest_postgres_api ${MAIN_SOURCES})
 target_link_libraries(c_rest_postgres_api pq gnutls)
 
-# Create the test executable
-add_executable(run_tests ${TEST_SOURCES})
-
-# Link Cgreen and required libraries to the test executable
-target_link_libraries(run_tests cgreen pq gnutls)
+# Define test files
+set(TEST_FILES
+        test/test_data_repository.c
+        test/test_dotenv.c
+        test/test_migration_manager.c
+        test/test_db_connection.c
+        test/test_json_parser.c
+)
 
 # Add Cgreen runner for unit tests
 enable_testing()
-add_test(NAME tests COMMAND cgreen-runner run_tests)
+
+foreach(TEST_FILE ${TEST_FILES})
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE) # Extract test name
+    add_executable(${TEST_NAME} ${TEST_FILE} ${SOURCES})   # Create an executable for each test
+    target_link_libraries(${TEST_NAME} PRIVATE cgreen pq gnutls) # Link libraries
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})       # Register the test
+endforeach()
+
+add_executable(test_camera_handler
+        test/test_camera_handler.c
+        src/camera_handler.c
+        src/json_parser.c
+)
+
+# Define the mock function for `handle_camera_onboarding`
+target_compile_definitions(test_camera_handler PRIVATE handle_camera_onboarding=handle_camera_onboarding_mock)
+target_link_libraries(test_camera_handler PRIVATE cgreen pq gnutls)
+add_test(NAME test_camera_handler COMMAND test_camera_handler)
+

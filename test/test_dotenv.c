@@ -95,3 +95,9 @@ TestSuite *Dotenv_tests() {
     add_test_with_context(suite, Dotenv, dotenv_load_handles_comments_and_empty_lines);
     return suite;
 }
+
+int main(int argc, char **argv) {
+    TestSuite *suite = create_test_suite();
+    add_suite(suite, Dotenv_tests());
+    return run_test_suite(suite, create_text_reporter());
+}

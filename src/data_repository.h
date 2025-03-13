@@ -4,7 +4,8 @@
 #include "db_connection.h"
 
 
-const char *fetch_data(DBConnHelpers *);
+const char *fetch_data(DBHelpers *);
+
 const char *fetch_data_with_stubs(
     PGconn *(*connectdb_func)(const char *),
     ConnStatusType (*status_func)(const PGconn *),
